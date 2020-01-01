@@ -1,5 +1,16 @@
 # huaxia
 
+## Project Creation
+```
+vue --version
+npm install @vue/cli -g
+cd ~/workspace/vue
+vue create huaxia
+cd huaxia
+npm run serve
+npm install vuetify --save
+```
+
 ## Project setup
 ```
 npm install
