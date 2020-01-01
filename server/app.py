@@ -9,24 +9,24 @@ from flask_cors import CORS
 BOOKS = [
     {
         'id': uuid.uuid4().hex,
-        'title': 'On the Road',
-        'author': 'Jack Kerouac',
-        'read': True,
-        'price': '19.99'
+        'title': '中文一年级班',
+        'teacher': '张老师',
+        'classroom': '102',
+        'price': '299.00'
     },
     {
         'id': uuid.uuid4().hex,
-        'title': 'Harry Potter and the Philosopher\'s Stone',
-        'author': 'J. K. Rowling',
-        'read': False,
-        'price': '9.99'      
+        'title': '中文二年级中班',
+        'teacher': '李老师',
+        'classroom': '211',
+        'price': '399.00'      
     },
     {
         'id': uuid.uuid4().hex,
-        'title': 'Green Eggs and Ham',
-        'author': 'Dr. Seuss',
-        'read': True,
-        'price': '4.99'
+        'title': '中文三年级大班',
+        'teacher': '王老师',
+        'classroom': '206',
+        'price': '499.00'
 
     }
 ]
@@ -65,8 +65,8 @@ def all_books():
         BOOKS.append({
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
-            'author': post_data.get('author'),
-            'read': post_data.get('read'),
+            'author': post_data.get('teacher'),
+            'read': post_data.get('classroom'),
             'price': post_data.get('price'),
         })
         response_object['message'] = 'Book added!'
@@ -91,8 +91,8 @@ def single_book(book_id):
         BOOKS.append({
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
-            'author': post_data.get('author'),
-            'read': post_data.get('read'),
+            'author': post_data.get('teacher'),
+            'read': post_data.get('classroom'),
             'price': post_data.get('price'),
         })
         response_object['message'] = 'Book updated!'
@@ -111,7 +111,7 @@ def create_charge():
         amount=amount,
         currency='usd',
         card=post_data.get('token'),
-        description=post_data.get('book')['title']
+        description=post_data.get('book')['title'] + '/' + post_data.get('book')['teacher']
     )
     response_object = {
         'status': 'success',

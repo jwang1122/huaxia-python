@@ -13,7 +13,7 @@
             <div>
               <h4>You are buying:</h4>
               <ul>
-                <li>Book Title: <em>{{ book.title }}</em></li>
+                <li>Book Title: <em>{{ book.title }} / {{book.teacher}}</em></li>
                 <li>Amount: <em>{{ book.price }}</em></li>
               </ul>
             </div>
@@ -81,8 +81,8 @@ export default {
     return {
       book: {
         title: '',
-        author: '',
-        read: [],
+        teacher: '',
+        classroom: '',
         price: '',
       },
       card: {
