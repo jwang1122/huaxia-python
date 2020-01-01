@@ -43,7 +43,7 @@
                   </button>
                   <router-link :to="`/order/${book.id}`"
                               class="btn btn-primary btn-sm">
-                      选课
+                      Purchase
                   </router-link>
                 </div>
               </td>
