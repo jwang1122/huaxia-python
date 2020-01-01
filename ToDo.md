@@ -8,4 +8,5 @@
 8. add customer into stripe.
 9. ~~change book(s) everywhere to class(es)~~
 10. check CRUD
+11. Load classes from MongoDB。
 

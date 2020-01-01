@@ -40,7 +40,7 @@
                           @click="onDeleteClass(class0)">
                       删除课程
                   </button>
-                  <router-link :to="`/order/${class0.id}`"
+                  <router-link :to="`/order/${class0._id}`"
                               class="btn btn-primary btn-sm">
                       交纳学费
                   </router-link>
@@ -105,7 +105,7 @@
     </b-modal>
     <b-modal ref="editClassModal"
             id="class-update-modal"
-            title="Update"
+            title="修改课程"
             hide-footer>
       <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
       <b-form-group id="form-title-edit-group"
@@ -174,10 +174,10 @@ export default {
       message: '',
       showMessage: false,
       editForm: {
-        id: '',
+        _id: '',
         title: '',
         teacher: '',
-        classroom: [],
+        classroom: '',
         price: '',
       },
     };
@@ -214,11 +214,11 @@ export default {
     initForm() {
       this.addClassForm.title = '';
       this.addClassForm.teacher = '';
-      this.addClassForm.classroom = [];
-      this.editForm.id = '';
+      this.addClassForm.classroom = '';
+      this.editForm._id = '';
       this.editForm.title = '';
       this.editForm.teacher = '';
-      this.editForm.classroom = [];
+      this.editForm.classroom = '';
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -249,7 +249,7 @@ export default {
         price: this.editForm.price,
         classroom: this.editForm.classroom,
       };
-      this.updateClass(payload, this.editForm.id);
+      this.updateClass(payload, this.editForm._id);
     },
     updateClass(payload, classID) {
       const path = `http://localhost:5000/classes/${classID}`;
@@ -286,7 +286,7 @@ export default {
         });
     },
     onDeleteClass(class0) {
-      this.removeClass(class0.id);
+      this.removeClass(class0._id);
     },
   },
   created() {

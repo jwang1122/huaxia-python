@@ -1,3 +1,8 @@
+import logging
+log_format = '%(asctime)s %(levelname)s [%(name)s] - %(message)s::%(filename)s::%(lineno)d'
+logging.basicConfig(filename='mylogs.log', filemode='w', level=logging.DEBUG, format=log_format)
+logger = logging.getLogger('WANG')
+
 import os
 import uuid
 import stripe
@@ -8,31 +13,6 @@ from pymongo import MongoClient
 from bson.json_util import dumps
 from bson.json_util import loads
 from pprint import pprint
-
-CLASSES = [
-    {
-        'id': uuid.uuid4().hex,
-        'title': '中文一年级班',
-        'teacher': '张老师',
-        'classroom': '102',
-        'price': '299.00'
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'title': '中文二年级中班',
-        'teacher': '李老师',
-        'classroom': '211',
-        'price': '399.00'      
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'title': '中文三年级大班',
-        'teacher': '王老师',
-        'classroom': '206',
-        'price': '499.00'
-
-    }
-]
 
 # configuration
 DEBUG = True
@@ -47,11 +27,11 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 def remove_class(class_id):
-    for class0 in CLASSES:
-        if class0['id'] == class_id:
-            CLASSES.remove(class0)
-            return True
-    return False
+    logger.info("@JWANG: " + class_id)
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    classes = db.classes
+    return classes.delete_one({'_id': class_id })
 
 
 # sanity check route
@@ -77,7 +57,7 @@ def all_classes():
             'price': post_data.get('price'),           
         }
         result = classes.insert_one(json)
-        if resul.acknowledged:
+        if result.acknowledged:
             response_object['message'] = 'Class added!' + result.inserted_id
     else:
         all_classes = classes.find()
@@ -90,6 +70,7 @@ def all_classes():
 
 @app.route('/classes/<class_id>', methods=['GET', 'PUT', 'DELETE'])
 def single_class(class_id):
+    logger.info("@JWANG: " + class_id);
     response_object = {'status': 'success'}
     if request.method == 'GET':
         # TODO: refactor to a lambda and filter
@@ -102,7 +83,7 @@ def single_class(class_id):
         post_data = request.get_json()
         remove_class(class_id)
         CLASSES.append({
-            'id': uuid.uuid4().hex,
+            '_id': uuid.uuid4().hex,
             'title': post_data.get('title'),
             'author': post_data.get('teacher'),
             'read': post_data.get('classroom'),
