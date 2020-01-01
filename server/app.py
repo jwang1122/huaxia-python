@@ -33,6 +33,7 @@ BOOKS = [
 
 # configuration
 DEBUG = True
+STRIPE_SECRET_KEY = 'sk_test_HV6gIlNhTCDxDKNxrZ0tz66H00oBk1QoX3'
 
 # instantiate the app
 app = Flask(__name__)
@@ -105,7 +106,7 @@ def create_charge():
     post_data = request.get_json()
     amount = round(float(post_data.get('book')['price']) * 100)
 #    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
-    stripe.api_key = 'sk_test_V93CEJpkQtbMSeBZmTsztHb500nD7eztA3'
+    stripe.api_key = STRIPE_SECRET_KEY
     charge = stripe.Charge.create(
         amount=amount,
         currency='usd',
@@ -120,7 +121,7 @@ def create_charge():
 
 @app.route('/charge/<charge_id>')
 def get_charge(charge_id):
-    stripe.api_key = 'sk_test_V93CEJpkQtbMSeBZmTsztHb500nD7eztA3'
+    stripe.api_key = STRIPE_SECRET_KEY
     response_object = {
         'status': 'success',
         'charge': stripe.Charge.retrieve(charge_id)

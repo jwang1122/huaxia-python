@@ -74,6 +74,7 @@
 <script src="https://js.stripe.com/v2/"></script>
 <script>
 import axios from 'axios';
+import stripeKey from '@/config.js'
 
 export default {
   data() {
@@ -90,7 +91,7 @@ export default {
         exp: '',
       },
       errors: [],
-      stripePublishableKey: 'pk_test_EtXrUdAWZ9rDaW5IokgwToxD00fEK9o8WS',
+      stripePublishableKey: stripeKey.STRIPE_PUBLIC_KEY,
       stripeCheck: false,
     };
   },

@@ -11,6 +11,9 @@ npm run serve
 npm install vuetify --save
 npm install --save axios vue-router
 ```
+add following line in public/index.html
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
 
 ## Project setup
 ```
