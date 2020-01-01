@@ -4,7 +4,7 @@ import stripe
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
+from pymongo import MongoClient
 
 CLASSES = [
     {
@@ -60,16 +60,28 @@ def ping_pong():
 @app.route('/classes', methods=['GET', 'POST'])
 def all_classes():
     response_object = {'status': 'success'}
+
     if request.method == 'POST':
         post_data = request.get_json()
         CLASSES.append({
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
-            'author': post_data.get('teacher'),
-            'read': post_data.get('classroom'),
+            'teacher': post_data.get('teacher'),
+            'classroom': post_data.get('classroom'),
             'price': post_data.get('price'),
         })
-        response_object['message'] = 'Class added!'
+        client = MongoClient('mongodb://localhost:27017')
+        db = client['huaxia']
+        classes = db.classes
+        json = {
+            'title': post_data.get('title'),
+            'teacher': post_data.get('teacher'),
+            'classroom': post_data.get('classroom'),
+            'price': post_data.get('price'),           
+        }
+        result = classes.insert_one(json)
+        if resul.acknowledged:
+            response_object['message'] = 'Class added!' + result.inserted_id
     else:
         response_object['classes'] = CLASSES
     return jsonify(response_object)

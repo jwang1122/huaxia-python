@@ -12,8 +12,8 @@
             <tr>
               <th scope="col">课程名称</th>
               <th scope="col">主讲教师</th>
-              <th scope="col">教室</th>
-              <th scope="col">学费</th>
+              <th scope="col">教室编号</th>
+              <th scope="col">学期学费</th>
               <th scope="col">课程简介</th>
               <th></th>
             </tr>
@@ -42,7 +42,7 @@
                   </button>
                   <router-link :to="`/order/${class0.id}`"
                               class="btn btn-primary btn-sm">
-                      加纳学费
+                      交纳学费
                   </router-link>
                 </div>
               </td>
@@ -53,11 +53,11 @@
     </div>
     <b-modal ref="addClassModal"
             id="class-modal"
-            title="Add a new class"
+            title="增加新课程"
             hide-footer>
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
       <b-form-group id="form-title-group"
-                    label="Title:"
+                    label="课程名称:"
                     label-for="form-title-input">
           <b-form-input id="form-title-input"
                         type="text"
@@ -66,18 +66,28 @@
                         placeholder="Enter title">
           </b-form-input>
         </b-form-group>
-        <b-form-group id="form-author-group"
-                      label="Author:"
-                      label-for="form-author-input">
-            <b-form-input id="form-author-input"
+        <b-form-group id="form-teacher-group"
+                      label="主讲教师:"
+                      label-for="form-teacher-input">
+            <b-form-input id="form-teacher-input"
                           type="text"
-                          v-model="addClassForm.author"
+                          v-model="addClassForm.teacher"
                           required
-                          placeholder="Enter author">
+                          placeholder="输入教师姓名">
+            </b-form-input>
+          </b-form-group>
+        <b-form-group id="form-classroom-group"
+                      label="教室编号:"
+                      label-for="form-classroom-input">
+            <b-form-input id="form-classroom-input"
+                          type="text"
+                          v-model="addClassForm.classroom"
+                          required
+                          placeholder="输入教室编号">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-price-group"
-                        label="Purchase price:"
+                        label="学费:"
                         label-for="form-price-input">
             <b-form-input id="form-price-input"
                           type="number"
@@ -87,14 +97,9 @@
                           placeholder="Enter price">
             </b-form-input>
           </b-form-group>
-        <b-form-group id="form-read-group">
-          <b-form-checkbox-group v-model="addClassForm.read" id="form-checks">
-            <b-form-checkbox value="true">Read?</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
         <b-button-group>
-          <b-button type="submit" variant="primary">Submit</b-button>
-          <b-button type="reset" variant="danger">Reset</b-button>
+          <b-button type="submit" variant="primary">确认增加</b-button>
+          <b-button type="reset" variant="danger">重新输入</b-button>
         </b-button-group>
       </b-form>
     </b-modal>
@@ -104,7 +109,7 @@
             hide-footer>
       <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
       <b-form-group id="form-title-edit-group"
-                    label="Title:"
+                    label="课程名称:"
                     label-for="form-title-edit-input">
           <b-form-input id="form-title-edit-input"
                         type="text"
@@ -113,34 +118,39 @@
                         placeholder="Enter title">
           </b-form-input>
         </b-form-group>
-        <b-form-group id="form-author-edit-group"
-                      label="Author:"
-                      label-for="form-author-edit-input">
-            <b-form-input id="form-author-edit-input"
+        <b-form-group id="form-teacher-edit-group"
+                      label="教师姓名:"
+                      label-for="form-teacher-edit-input">
+            <b-form-input id="form-teacher-edit-input"
                           type="text"
-                          v-model="editForm.author"
+                          v-model="editForm.teacher"
                           required
-                          placeholder="Enter author">
+                          placeholder="Enter teacher name">
+            </b-form-input>
+          </b-form-group>
+        <b-form-group id="form-classroom-edit-group"
+                      label="教室编号:"
+                      label-for="form-classroom-edit-input">
+            <b-form-input id="form-classroom-edit-input"
+                          type="text"
+                          v-model="editForm.classroom"
+                          required
+                          placeholder="Enter classroom">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-price-edit-group"
-                        label="Purchase price:"
+                        label="学期学费:"
                         label-for="form-price-edit-input">
             <b-form-input id="form-price-edit-input"
                           type="text"
                           v-model="editForm.price"
                           required
-                          placeholder="Enter price">
+                          placeholder="输入学期学费">
             </b-form-input>
           </b-form-group>
-        <b-form-group id="form-read-edit-group">
-          <b-form-checkbox-group v-model="editForm.read" id="form-checks">
-            <b-form-checkbox value="true">Read?</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
         <b-button-group>
-          <b-button type="submit" variant="primary">Update</b-button>
-          <b-button type="reset" variant="danger">Cancel</b-button>
+          <b-button type="submit" variant="primary">确认修改</b-button>
+          <b-button type="reset" variant="danger">放弃修改</b-button>
         </b-button-group>
       </b-form>
     </b-modal>
@@ -166,8 +176,8 @@ export default {
       editForm: {
         id: '',
         title: '',
-        author: '',
-        read: [],
+        teacher: '',
+        classroom: [],
         price: '',
       },
     };
@@ -192,7 +202,7 @@ export default {
       axios.post(path, payload)
         .then(() => {
           this.getClasses();
-          this.message = 'Class added!';
+          this.message = '新课程成功加入!';
           this.showMessage = true;
         })
         .catch((error) => {
@@ -203,23 +213,21 @@ export default {
     },
     initForm() {
       this.addClassForm.title = '';
-      this.addClassForm.author = '';
-      this.addClassForm.read = [];
+      this.addClassForm.teacher = '';
+      this.addClassForm.classroom = [];
       this.editForm.id = '';
       this.editForm.title = '';
-      this.editForm.author = '';
-      this.editForm.read = [];
+      this.editForm.teacher = '';
+      this.editForm.classroom = [];
     },
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addClassModal.hide();
-      let read = false;
-      if (this.addClassForm.read[0]) read = true;
       const payload = {
         title: this.addClassForm.title,
-        author: this.addClassForm.author,
+        teacher: this.addClassForm.teacher,
         price: this.addClassForm.price,
-        read, // property shorthand
+        classroom: this.addClassForm.classroom, // property shorthand
       };
       this.addClass(payload);
       this.initForm();
@@ -235,13 +243,11 @@ export default {
     onSubmitUpdate(evt) {
       evt.preventDefault();
       this.$refs.editClassModal.hide();
-      let read = false;
-      if (this.editForm.read[0]) read = true;
       const payload = {
         title: this.editForm.title,
-        author: this.editForm.author,
+        teacher: this.editForm.teacher,
         price: this.editForm.price,
-        read,
+        classroom: this.editForm.classroom,
       };
       this.updateClass(payload, this.editForm.id);
     },
