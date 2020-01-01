@@ -5,7 +5,7 @@
         <h1>中文课程</h1>
         <hr><br><br>
         <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal>增加课程</button>
+        <button type="button" class="btn btn-success btn-sm" v-b-modal.class-modal>增加课程</button>
         <br><br>
         <table class="table table-hover">
           <thead>
@@ -19,28 +19,28 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(book, index) in books" :key="index">
-              <td>{{ book.title }}</td>
-              <td>{{ book.teacher }}</td>
-              <td>{{ book.classroom }}</td>
-              <td>${{ book.price }}</td>
-              <td>{{ book.description }}</td>
+            <tr v-for="(class0, index) in classes" :key="index">
+              <td>{{ class0.title }}</td>
+              <td>{{ class0.teacher }}</td>
+              <td>{{ class0.classroom }}</td>
+              <td>${{ class0.price }}</td>
+              <td>{{ class0.description }}</td>
               <td>
                 <div class="btn-group" role="group">
                   <button
                           type="button"
                           class="btn btn-warning btn-sm"
-                          v-b-modal.book-update-modal
-                          @click="editBook(book)">
+                          v-b-modal.class-update-modal
+                          @click="editClass(class0)">
                       修改课程
                   </button>
                   <button
                           type="button"
                           class="btn btn-danger btn-sm"
-                          @click="onDeleteBook(book)">
+                          @click="onDeleteClass(class0)">
                       删除课程
                   </button>
-                  <router-link :to="`/order/${book.id}`"
+                  <router-link :to="`/order/${class0.id}`"
                               class="btn btn-primary btn-sm">
                       加纳学费
                   </router-link>
@@ -51,9 +51,9 @@
         </table>
       </div>
     </div>
-    <b-modal ref="addBookModal"
-            id="book-modal"
-            title="Add a new book"
+    <b-modal ref="addClassModal"
+            id="class-modal"
+            title="Add a new class"
             hide-footer>
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
       <b-form-group id="form-title-group"
@@ -61,7 +61,7 @@
                     label-for="form-title-input">
           <b-form-input id="form-title-input"
                         type="text"
-                        v-model="addBookForm.title"
+                        v-model="addClassForm.title"
                         required
                         placeholder="Enter title">
           </b-form-input>
@@ -71,7 +71,7 @@
                       label-for="form-author-input">
             <b-form-input id="form-author-input"
                           type="text"
-                          v-model="addBookForm.author"
+                          v-model="addClassForm.author"
                           required
                           placeholder="Enter author">
             </b-form-input>
@@ -82,13 +82,13 @@
             <b-form-input id="form-price-input"
                           type="number"
                           step="0.01"
-                          v-model="addBookForm.price"
+                          v-model="addClassForm.price"
                           required
                           placeholder="Enter price">
             </b-form-input>
           </b-form-group>
         <b-form-group id="form-read-group">
-          <b-form-checkbox-group v-model="addBookForm.read" id="form-checks">
+          <b-form-checkbox-group v-model="addClassForm.read" id="form-checks">
             <b-form-checkbox value="true">Read?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
@@ -98,8 +98,8 @@
         </b-button-group>
       </b-form>
     </b-modal>
-    <b-modal ref="editBookModal"
-            id="book-update-modal"
+    <b-modal ref="editClassModal"
+            id="class-update-modal"
             title="Update"
             hide-footer>
       <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
@@ -154,11 +154,11 @@ import Alert from './Alert.vue';
 export default {
   data() {
     return {
-      books: [],
-      addBookForm: {
+      classes: [],
+      addClassForm: {
         title: '',
-        author: '',
-        read: [],
+        teacher: '',
+        classroom: '',
         price: '',
       },
       message: '',
@@ -176,35 +176,35 @@ export default {
     alert: Alert,
   },
   methods: {
-    getBooks() {
-      const path = 'http://localhost:5000/books';
+    getClasses() {
+      const path = 'http://localhost:5000/classes';
       axios.get(path)
         .then((res) => {
-          this.books = res.data.books;
+          this.classes = res.data.classes;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
         });
     },
-    addBook(payload) {
-      const path = 'http://localhost:5000/books';
+    addClass(payload) {
+      const path = 'http://localhost:5000/classes';
       axios.post(path, payload)
         .then(() => {
-          this.getBooks();
-          this.message = 'Book added!';
+          this.getClasses();
+          this.message = 'Class added!';
           this.showMessage = true;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.log(error);
-          this.getBooks();
+          this.getClasses();
         });
     },
     initForm() {
-      this.addBookForm.title = '';
-      this.addBookForm.author = '';
-      this.addBookForm.read = [];
+      this.addClassForm.title = '';
+      this.addClassForm.author = '';
+      this.addClassForm.read = [];
       this.editForm.id = '';
       this.editForm.title = '';
       this.editForm.author = '';
@@ -212,29 +212,29 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.$refs.addBookModal.hide();
+      this.$refs.addClassModal.hide();
       let read = false;
-      if (this.addBookForm.read[0]) read = true;
+      if (this.addClassForm.read[0]) read = true;
       const payload = {
-        title: this.addBookForm.title,
-        author: this.addBookForm.author,
-        price: this.addBookForm.price,
+        title: this.addClassForm.title,
+        author: this.addClassForm.author,
+        price: this.addClassForm.price,
         read, // property shorthand
       };
-      this.addBook(payload);
+      this.addClass(payload);
       this.initForm();
     },
     onReset(evt) {
       evt.preventDefault();
-      this.$refs.addBookModal.hide();
+      this.$refs.addClassModal.hide();
       this.initForm();
     },
-    editBook(book) {
-      this.editForm = book;
+    editClass(class0) {
+      this.editForm = class0;
     },
     onSubmitUpdate(evt) {
       evt.preventDefault();
-      this.$refs.editBookModal.hide();
+      this.$refs.editClassModal.hide();
       let read = false;
       if (this.editForm.read[0]) read = true;
       const payload = {
@@ -243,48 +243,48 @@ export default {
         price: this.editForm.price,
         read,
       };
-      this.updateBook(payload, this.editForm.id);
+      this.updateClass(payload, this.editForm.id);
     },
-    updateBook(payload, bookID) {
-      const path = `http://localhost:5000/books/${bookID}`;
+    updateClass(payload, classID) {
+      const path = `http://localhost:5000/classes/${classID}`;
       axios.put(path, payload)
         .then(() => {
-          this.getBooks();
-          this.message = 'Book updated!';
+          this.getClasses();
+          this.message = 'Class updated!';
           this.showMessage = true;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
-          this.getBooks();
+          this.getClasses();
         });
     },
     onResetUpdate(evt) {
       evt.preventDefault();
-      this.$refs.editBookModal.hide();
+      this.$refs.editClassModal.hide();
       this.initForm();
-      this.getBooks(); // why?
+      this.getClasses(); // why?
     },
-    removeBook(bookID) {
-      const path = `http://localhost:5000/books/${bookID}`;
+    removeClass(classID) {
+      const path = `http://localhost:5000/classes/${classID}`;
       axios.delete(path)
         .then(() => {
-          this.getBooks();
-          this.message = 'Book removed!';
+          this.getClasses();
+          this.message = 'Class removed!';
           this.showMessage = true;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
-          this.getBooks();
+          this.getClasses();
         });
     },
-    onDeleteBook(book) {
-      this.removeBook(book.id);
+    onDeleteClass(class0) {
+      this.removeClass(class0.id);
     },
   },
   created() {
-    this.getBooks();
+    this.getClasses();
   },
 };
 </script>

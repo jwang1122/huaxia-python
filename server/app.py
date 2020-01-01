@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 
-BOOKS = [
+CLASSES = [
     {
         'id': uuid.uuid4().hex,
         'title': '中文一年级班',
@@ -43,10 +43,10 @@ app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}})
 
 
-def remove_book(book_id):
-    for book in BOOKS:
-        if book['id'] == book_id:
-            BOOKS.remove(book)
+def remove_class(class_id):
+    for class0 in CLASSES:
+        if class0['id'] == class_id:
+            CLASSES.remove(class0)
             return True
     return False
 
@@ -57,61 +57,61 @@ def ping_pong():
     return jsonify('pong!')
 
 
-@app.route('/books', methods=['GET', 'POST'])
-def all_books():
+@app.route('/classes', methods=['GET', 'POST'])
+def all_classes():
     response_object = {'status': 'success'}
     if request.method == 'POST':
         post_data = request.get_json()
-        BOOKS.append({
+        CLASSES.append({
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
             'author': post_data.get('teacher'),
             'read': post_data.get('classroom'),
             'price': post_data.get('price'),
         })
-        response_object['message'] = 'Book added!'
+        response_object['message'] = 'Class added!'
     else:
-        response_object['books'] = BOOKS
+        response_object['classes'] = CLASSES
     return jsonify(response_object)
 
 
-@app.route('/books/<book_id>', methods=['GET', 'PUT', 'DELETE'])
-def single_book(book_id):
+@app.route('/classes/<class_id>', methods=['GET', 'PUT', 'DELETE'])
+def single_class(class_id):
     response_object = {'status': 'success'}
     if request.method == 'GET':
         # TODO: refactor to a lambda and filter
-        return_book = ''
-        for book in BOOKS:
-            if book['id'] == book_id:
-                return_book = book
-        response_object['book'] = return_book
+        return_class = ''
+        for class0 in CLASSES:
+            if class0['id'] == class_id:
+                return_class = class0
+        response_object['class0'] = return_class
     if request.method == 'PUT':
         post_data = request.get_json()
-        remove_book(book_id)
-        BOOKS.append({
+        remove_class(class_id)
+        CLASSES.append({
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
             'author': post_data.get('teacher'),
             'read': post_data.get('classroom'),
             'price': post_data.get('price'),
         })
-        response_object['message'] = 'Book updated!'
+        response_object['message'] = 'Class updated!'
     if request.method == 'DELETE':
-        remove_book(book_id)
-        response_object['message'] = 'Book removed!'
+        remove_class(class_id)
+        response_object['message'] = 'Class removed!'
     return jsonify(response_object)
 
 @app.route('/charge', methods=['POST'])
 def create_charge():
     post_data = request.get_json()
-    amount = round(float(post_data.get('book')['price']) * 100)
+    amount = round(float(post_data.get('class')['price']) * 100)
 #    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
     stripe.api_key = STRIPE_SECRET_KEY
     charge = stripe.Charge.create(
         amount=amount,
         currency='usd',
         card=post_data.get('token'),
-        description=post_data.get('book')['title'] + '/' + post_data.get('book')['teacher']
+        description=post_data.get('class')['title'] + '/' + post_data.get('class')['teacher']
     )
     response_object = {
         'status': 'success',
