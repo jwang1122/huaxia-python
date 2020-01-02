@@ -20,16 +20,24 @@ add following line in public/index.html
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Run this application
 1. Need start python stripe server before running Vue web page
 open Console command window
 ```
 cd ~/workspace/vue/huaxia/server
+conda deactivate
 source env/bin/activate
 python app.py
 ```
-2. Start web server
+2. Start MongoDB server
+Open command window
 ```
+mongod
+```
+3. Start web server
+Open command window
+```
+cd workspace/vue/huaxia
 npm run serve
 ```
 
