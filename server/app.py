@@ -79,6 +79,18 @@ def findClass(class_id):
     classes = db.classes
     return classes.find_one({'_id':class_id})
 
+def findUser(username):
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    users = db.users
+    return users.find_one({'username':username})
+
+@app.route('/users/<username>', methods=['GET'])
+def getUser(username):
+    response_object = {'status': 'success'}
+    response_object['user'] = findUser(username)
+    return jsonify(response_object)
+    
 @app.route('/classes/<class_id>', methods=['GET', 'PUT', 'DELETE'])
 def single_class(class_id):
     logger.info("@JWANG: " + class_id);

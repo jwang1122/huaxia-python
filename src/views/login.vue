@@ -8,8 +8,11 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "Login",
+  user: {},
   data() {
     return {
       input: {
@@ -21,18 +24,31 @@ export default {
   methods: {
     login() {
       if (this.input.username != "" && this.input.password != "") {
-        if (
-          this.input.username == "jwang" &&
-          this.input.password == "password"
-        ) {
-          this.$emit("authenticated", true);
-          this.$router.replace({ name: "classes" });
-        } else {
-          alert("The username and / or password is incorrect");
-        }
+        this.authenticate(this.input.username, this.input.password);
       } else {
-        alert("A username and password must be present");
+        alert("A username and password must be present.");
       }
+    },
+    authenticate(username, password){
+      const path = `http://localhost:5000/users/${username}`;
+      axios.get(path)
+        .then((res) => {
+          this.user = res.data.user;
+//          alert("@JWANG: " + this.user['email'] + '/' + password);
+          if(password==this.user['password']){
+            this.$emit("authenticated", true);
+            this.$emit("user", this.user);
+            this.$store.commit("SET_USER", this.user);
+            this.$router.replace({ name: "classes" });
+          } else {
+            alert("The username and / or password is incorrect");
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+
     }
   }
 };

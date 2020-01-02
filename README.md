@@ -37,6 +37,7 @@ mongod
 3. Start web server
 Open command window
 ```
+npm install --save vuex
 cd workspace/vue/huaxia
 npm run serve
 ```

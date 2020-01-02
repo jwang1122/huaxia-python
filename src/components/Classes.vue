@@ -164,6 +164,7 @@ import Alert from './Alert.vue';
 export default {
   data() {
     return {
+      user:{},
       classes: [],
       addClassForm: {
         title: '',
@@ -184,6 +185,10 @@ export default {
   },
   components: {
     alert: Alert,
+  },
+  mounted() {
+    this.user = this.$store.getters.USER;
+    alert("@JWANG: user rule: " + this.user['rule']);
   },
   methods: {
     getClasses() {
