@@ -23,7 +23,7 @@ export default new Router({
       component: Classes,
     },
     {
-      path: '/order/:id',
+      path: '/order/:_id',
       name: 'Order',
       component: Order,
     },

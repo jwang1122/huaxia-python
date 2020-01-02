@@ -13,8 +13,8 @@
             <div>
               <h4>You are buying:</h4>
               <ul>
-                <li>Book Title: <em>{{ book.title }} / {{book.teacher}}</em></li>
-                <li>Amount: <em>{{ book.price }}</em></li>
+                <li>class Title: <em>{{ class0.title }} / {{class0.teacher}}</em></li>
+                <li>Amount: <em>{{ class0.price }}</em></li>
               </ul>
             </div>
             <div>
@@ -79,11 +79,11 @@ import stripeKey from '@/config.js'
 export default {
   data() {
     return {
-      book: {
+      class0: {
         title: '',
         teacher: '',
         classroom: '',
-        price: '',
+        price: 0,
       },
       card: {
         number: '',
@@ -96,11 +96,11 @@ export default {
     };
   },
   methods: {
-    getBook() {
-      const path = `http://localhost:5000/books/${this.$route.params.id}`;
+    getClass() {
+      const path = `http://localhost:5000/classes/${this.$route.params._id}`;
       axios.get(path)
         .then((res) => {
-          this.book = res.data.book;
+          this.class0 = res.data.class0;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -137,8 +137,9 @@ export default {
           this.errors.push(response.error.message);
           // eslint-disable-next-line
         } else {
+          console.log("@JWANG: " + this.class0['price']);
           const payload = {
-            book: this.book,
+            class0: this.class0,
             token: response.id,
           };
           const path = 'http://localhost:5000/charge';
@@ -156,7 +157,7 @@ export default {
 
   },
   created() {
-    this.getBook();
+    this.getClass();
   },
 };
 </script>

@@ -1,8 +1,0 @@
-2020-01-01 15:01:27,364 WARNING [werkzeug] -  * Debugger is active!::_internal.py::122
-2020-01-01 15:01:27,371 INFO [werkzeug] -  * Debugger PIN: 338-137-258::_internal.py::122
-2020-01-01 15:01:32,347 INFO [werkzeug] - 127.0.0.1 - - [01/Jan/2020 15:01:32] "GET /classes HTTP/1.1" 200 -::_internal.py::122
-2020-01-01 15:01:36,431 INFO [werkzeug] - 127.0.0.1 - - [01/Jan/2020 15:01:36] "OPTIONS /classes/11c224c7d6fa4e87a85503e805768ea4 HTTP/1.1" 200 -::_internal.py::122
-2020-01-01 15:01:36,438 INFO [WANG] - @JWANG: 11c224c7d6fa4e87a85503e805768ea4::app.py::73
-2020-01-01 15:01:36,438 INFO [WANG] - @JWANG: 11c224c7d6fa4e87a85503e805768ea4::app.py::30
-2020-01-01 15:01:36,443 INFO [werkzeug] - 127.0.0.1 - - [01/Jan/2020 15:01:36] "DELETE /classes/11c224c7d6fa4e87a85503e805768ea4 HTTP/1.1" 200 -::_internal.py::122
-2020-01-01 15:01:36,453 INFO [werkzeug] - 127.0.0.1 - - [01/Jan/2020 15:01:36] "GET /classes HTTP/1.1" 200 -::_internal.py::122

@@ -169,7 +169,7 @@ export default {
         title: '',
         teacher: '',
         classroom: '',
-        price: '',
+        price: 0,
       },
       message: '',
       showMessage: false,
@@ -178,7 +178,7 @@ export default {
         title: '',
         teacher: '',
         classroom: '',
-        price: '',
+        price: 0,
       },
     };
   },
@@ -256,7 +256,7 @@ export default {
       axios.put(path, payload)
         .then(() => {
           this.getClasses();
-          this.message = 'Class updated!';
+          this.message = '课程完成修正!';
           this.showMessage = true;
         })
         .catch((error) => {
@@ -276,7 +276,7 @@ export default {
       axios.delete(path)
         .then(() => {
           this.getClasses();
-          this.message = 'Class removed!';
+          this.message = '课程成功被删除!';
           this.showMessage = true;
         })
         .catch((error) => {

@@ -56,9 +56,7 @@ def all_classes():
             'classroom': post_data.get('classroom'),
             'price': post_data.get('price'),           
         }
-        result = classes.insert_one(json)
-        if result.acknowledged:
-            response_object['message'] = 'Class added!' + result.inserted_id
+        response_object['message'] = addClass(json)
     else:
         all_classes = classes.find()
         myclasses = []
@@ -67,28 +65,37 @@ def all_classes():
         response_object['classes'] = myclasses
     return jsonify(response_object)
 
+def addClass(class0):
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    classes = db.classes
+    result = classes.insert_one(class0)
+    if result.acknowledged:
+        return 'Class added!' + result.inserted_id
+
+def findClass(class_id):
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    classes = db.classes
+    return classes.find_one({'_id':class_id})
 
 @app.route('/classes/<class_id>', methods=['GET', 'PUT', 'DELETE'])
 def single_class(class_id):
     logger.info("@JWANG: " + class_id);
     response_object = {'status': 'success'}
     if request.method == 'GET':
-        # TODO: refactor to a lambda and filter
-        return_class = ''
-        for class0 in CLASSES:
-            if class0['id'] == class_id:
-                return_class = class0
-        response_object['class0'] = return_class
+        response_object['class0'] = findClass(class_id)
     if request.method == 'PUT':
         post_data = request.get_json()
         remove_class(class_id)
-        CLASSES.append({
+        class0={
             '_id': uuid.uuid4().hex,
             'title': post_data.get('title'),
-            'author': post_data.get('teacher'),
-            'read': post_data.get('classroom'),
+            'teacher': post_data.get('teacher'),
+            'classroom': post_data.get('classroom'),
             'price': post_data.get('price'),
-        })
+        }
+        addClass(class0)
         response_object['message'] = 'Class updated!'
     if request.method == 'DELETE':
         remove_class(class_id)
@@ -98,14 +105,15 @@ def single_class(class_id):
 @app.route('/charge', methods=['POST'])
 def create_charge():
     post_data = request.get_json()
-    amount = round(float(post_data.get('class')['price']) * 100)
+    logger.info("@JWANG: " + post_data.get('class0')['price']);
+    amount = round(float(post_data.get('class0')['price']) * 100)
 #    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
     stripe.api_key = STRIPE_SECRET_KEY
     charge = stripe.Charge.create(
         amount=amount,
         currency='usd',
         card=post_data.get('token'),
-        description=post_data.get('class')['title'] + '/' + post_data.get('class')['teacher']
+        description=post_data.get('class0')['title'] + '/' + post_data.get('class0')['teacher']
     )
     response_object = {
         'status': 'success',
