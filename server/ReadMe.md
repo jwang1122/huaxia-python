@@ -16,3 +16,8 @@ pip install -r requirements.txt
 pip install stripe
 pip install pymongo
 ```
+where in requirements.txt includes all necessary modules, such as pymongo...
+
+## Database maintenance tool
+1. user.py; maintain huaxia.users collection
+2. course.py; maintain huaxia.classes collection
