@@ -27,20 +27,23 @@
               <td>{{ class0.description }}</td>
               <td>
                 <div class="btn-group" role="group">
-                  <button
+                  <button 
                           type="button"
                           class="btn btn-warning btn-sm"
                           v-b-modal.class-update-modal
+                          v-if="user['rule']=='admin'"
                           @click="editClass(class0)">
                       修改课程
                   </button>
                   <button
                           type="button"
+                          v-if="user['rule']=='admin'"
                           class="btn btn-danger btn-sm"
                           @click="onDeleteClass(class0)">
                       删除课程
                   </button>
                   <router-link :to="`/order/${class0._id}`"
+                              v-if="user['rule']!='admin'"
                               class="btn btn-primary btn-sm">
                       交纳学费
                   </router-link>
