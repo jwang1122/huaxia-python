@@ -2,11 +2,11 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-10">
-        <h1>Thanks for purchasing!</h1>
-        <h2>Book Name: {{ this.book.description }}</h2>
-        <h2>Total Amount: ${{ this.book.amount }}</h2>
+        <h1>衷心感谢您注册中文学校的学习课程!</h1>
+        <h2>课程名称: {{ this.book.description }}</h2>
+        <h2>学期学费: ${{ this.book.amount }}</h2>
         <hr><br>
-        <router-link to="/" class="btn btn-primary btn-sm">Back Home</router-link>
+        <router-link to="/courses" class="btn btn-primary btn-sm">返回</router-link>
       </div>
     </div>
   </div>

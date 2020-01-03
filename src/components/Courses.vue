@@ -2,11 +2,14 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-10">
-        <h1>华夏中文学校-糖城分校-中文课程</h1>
-        <hr><br><br>
+        <h2>华夏中文学校-糖城分校-中文课程        
+          <button 
+          type="button" 
+          class="btn btn-success btn-sm" 
+          v-if="user['rule']=='admin'"
+          v-b-modal.class-modal>增加课程</button></h2>
         <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.class-modal>增加课程</button>
-        <br><br>
+
         <table class="table table-hover">
           <thead>
             <tr>
@@ -14,17 +17,25 @@
               <th scope="col">主讲教师</th>
               <th scope="col">教室编号</th>
               <th scope="col">学期学费</th>
-              <th scope="col">课程简介</th>
+              <th scope="col">课程链接</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(class0, index) in classes" :key="index">
-              <td>{{ class0.title }}</td>
-              <td>{{ class0.teacher }}</td>
-              <td>{{ class0.classroom }}</td>
-              <td>${{ class0.price }}</td>
-              <td>{{ class0.description }}</td>
+            <tr v-for="(course, index) in courses" :key="index">
+              <td>{{ course.title }}</td>
+              <td>{{ course.teacher }}</td>
+              <td>{{ course.classroom }}</td>
+              <td>${{ course.price }}</td>
+              <td>
+                 <button 
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          @click="getCourseInfo(course)">
+                      简介
+                  </button>
+
+              </td>
               <td>
                 <div class="btn-group" role="group">
                   <button 
@@ -32,17 +43,17 @@
                           class="btn btn-warning btn-sm"
                           v-b-modal.class-update-modal
                           v-if="user['rule']=='admin'"
-                          @click="editClass(class0)">
-                      修改课程
+                          @click="editClass(course)">
+                      修改
                   </button>
                   <button
                           type="button"
                           v-if="user['rule']=='admin'"
                           class="btn btn-danger btn-sm"
-                          @click="onDeleteClass(class0)">
-                      删除课程
+                          @click="onDeleteClass(course)">
+                      删除
                   </button>
-                  <router-link :to="`/order/${class0._id}`"
+                  <router-link :to="`/order/${course._id}`"
                               v-if="user['rule']!='admin'"
                               class="btn btn-primary btn-sm">
                       交纳学费
@@ -87,6 +98,16 @@
                           v-model="addClassForm.classroom"
                           required
                           placeholder="输入教室编号">
+            </b-form-input>
+          </b-form-group>
+        <b-form-group id="form-infolink-group"
+                      label="课程简介:"
+                      label-for="form-infolink-input">
+            <b-form-input id="form-infolink-input"
+                          type="text"
+                          v-model="addClassForm.infolink"
+                          required
+                          placeholder="Enter infolink">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-price-group"
@@ -141,6 +162,16 @@
                           placeholder="Enter classroom">
             </b-form-input>
           </b-form-group>
+        <b-form-group id="form-classroom-edit-group"
+                      label="课程简介:"
+                      label-for="form-classroom-edit-input">
+            <b-form-input id="form-classroom-edit-input"
+                          type="text"
+                          v-model="editForm.infolink"
+                          required
+                          placeholder="Enter infolink">
+            </b-form-input>
+          </b-form-group>
           <b-form-group id="form-price-edit-group"
                         label="学期学费:"
                         label-for="form-price-edit-input">
@@ -168,11 +199,12 @@ export default {
   data() {
     return {
       user:{},
-      classes: [],
+      courses: [],
       addClassForm: {
         title: '',
         teacher: '',
         classroom: '',
+        infolink:'',
         price: 0,
       },
       message: '',
@@ -182,6 +214,7 @@ export default {
         title: '',
         teacher: '',
         classroom: '',
+        infolink: '',
         price: 0,
       },
     };
@@ -191,14 +224,14 @@ export default {
   },
   mounted() {
     this.user = this.$store.getters.USER;
-    alert("@JWANG: user rule: " + this.user['rule']);
+//    alert("@JWANG: user rule: " + this.user['rule']);
   },
   methods: {
-    getClasses() {
-      const path = 'http://localhost:5000/classes';
+    getCourses() {
+      const path = 'http://localhost:5000/courses';
       axios.get(path)
         .then((res) => {
-          this.classes = res.data.classes;
+          this.courses = res.data.courses;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -206,17 +239,17 @@ export default {
         });
     },
     addClass(payload) {
-      const path = 'http://localhost:5000/classes';
+      const path = 'http://localhost:5000/courses';
       axios.post(path, payload)
         .then(() => {
-          this.getClasses();
+          this.getCourses();
           this.message = '新课程成功加入!';
           this.showMessage = true;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.log(error);
-          this.getClasses();
+          this.getCourses();
         });
     },
     initForm() {
@@ -236,6 +269,7 @@ export default {
         teacher: this.addClassForm.teacher,
         price: this.addClassForm.price,
         classroom: this.addClassForm.classroom, // property shorthand
+        infolink: this.addClassForm.infolink,
       };
       this.addClass(payload);
       this.initForm();
@@ -245,8 +279,8 @@ export default {
       this.$refs.addClassModal.hide();
       this.initForm();
     },
-    editClass(class0) {
-      this.editForm = class0;
+    editClass(course) {
+      this.editForm = course;
     },
     onSubmitUpdate(evt) {
       evt.preventDefault();
@@ -256,49 +290,54 @@ export default {
         teacher: this.editForm.teacher,
         price: this.editForm.price,
         classroom: this.editForm.classroom,
+        infolink: this.addClassForm.infolink,
       };
       this.updateClass(payload, this.editForm._id);
     },
     updateClass(payload, classID) {
-      const path = `http://localhost:5000/classes/${classID}`;
+      const path = `http://localhost:5000/courses/${classID}`;
       axios.put(path, payload)
         .then(() => {
-          this.getClasses();
+          this.getCourses();
           this.message = '课程完成修正!';
           this.showMessage = true;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
-          this.getClasses();
+          this.getCourses();
         });
     },
     onResetUpdate(evt) {
       evt.preventDefault();
       this.$refs.editClassModal.hide();
       this.initForm();
-      this.getClasses(); // why?
+      this.getCourses(); // why?
     },
     removeClass(classID) {
-      const path = `http://localhost:5000/classes/${classID}`;
+      const path = `http://localhost:5000/courses/${classID}`;
       axios.delete(path)
         .then(() => {
-          this.getClasses();
+          this.getCourses();
           this.message = '课程成功被删除!';
           this.showMessage = true;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
-          this.getClasses();
+          this.getCourses();
         });
     },
-    onDeleteClass(class0) {
-      this.removeClass(class0._id);
+    onDeleteClass(course) {
+      this.removeClass(course._id);
+    },
+    getCourseInfo(course){
+       this.$store.commit("SET_COURSE", course);
+      this.$router.replace({ name: "secure" });
     },
   },
   created() {
-    this.getClasses();
+    this.getCourses();
   },
 };
 </script>

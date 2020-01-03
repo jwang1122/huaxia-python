@@ -4,7 +4,7 @@
       <div class="col-sm-10">
         <h1>Ready to buy?</h1>
         <hr>
-        <router-link to="/" class="btn btn-primary">
+        <router-link to="/courses" class="btn btn-primary">
           Back Home
         </router-link>
         <br><br><br>
@@ -13,8 +13,8 @@
             <div>
               <h4>You are buying:</h4>
               <ul>
-                <li>class Title: <em>{{ class0.title }} / {{class0.teacher}}</em></li>
-                <li>Amount: <em>{{ class0.price }}</em></li>
+                <li>course Title: <em>{{ course.title }} / {{course.teacher}}</em></li>
+                <li>Amount: <em>{{ course.price }}</em></li>
               </ul>
             </div>
             <div>
@@ -79,10 +79,11 @@ import stripeKey from '@/config.js'
 export default {
   data() {
     return {
-      class0: {
+      course: {
         title: '',
         teacher: '',
         classroom: '',
+        infolink:'',
         price: 0,
       },
       card: {
@@ -96,11 +97,11 @@ export default {
     };
   },
   methods: {
-    getClass() {
-      const path = `http://localhost:5000/classes/${this.$route.params._id}`;
+    getCourse() {
+      const path = `http://localhost:5000/courses/${this.$route.params._id}`;
       axios.get(path)
         .then((res) => {
-          this.class0 = res.data.class0;
+          this.course = res.data.course;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -108,7 +109,7 @@ export default {
         });
     },
     validate() {
-      alert('validate()...');
+//      alert('validate()...');
       this.errors = [];
       let valid = true;
       if (!this.card.number) {
@@ -137,9 +138,9 @@ export default {
           this.errors.push(response.error.message);
           // eslint-disable-next-line
         } else {
-          console.log("@JWANG: " + this.class0['price']);
+          console.log("@JWANG: " + this.course['price']);
           const payload = {
-            class0: this.class0,
+            course: this.course,
             token: response.id,
           };
           const path = 'http://localhost:5000/charge';
@@ -157,7 +158,7 @@ export default {
 
   },
   created() {
-    this.getClass();
+    this.getCourse();
   },
 };
 </script>

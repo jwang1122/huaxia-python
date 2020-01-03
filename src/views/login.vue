@@ -39,7 +39,7 @@ export default {
             this.$emit("authenticated", true);
             this.$emit("user", this.user);
             this.$store.commit("SET_USER", this.user);
-            this.$router.replace({ name: "classes" });
+            this.$router.replace({ name: "courses" });
           } else {
             alert("The username and / or password is incorrect");
           }

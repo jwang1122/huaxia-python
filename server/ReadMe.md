@@ -21,3 +21,11 @@ where in requirements.txt includes all necessary modules, such as pymongo...
 ## Database maintenance tool
 1. user.py; maintain huaxia.users collection
 2. course.py; maintain huaxia.classes collection
+
+## Integration tests
+[Check server startup](http://localhost:5000/ping)
+[get all courses](http://localhost:5000/courses)
+[Find user by name: wei](http://localhost:5000/users/wei)
+[Insert one course]
+[Delete one course]
+[Modify one course]

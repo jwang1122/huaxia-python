@@ -6,20 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     uid: undefined,
-    roomId: undefined,
-    user: {}, // firebase author user
-    profile: {
-      id: "",
-      user: {},
-      firstName: "",
-      lastName: "",
-      email: ""
-    },
-    product: {
-      roomType: "",
-      price: ""
-    },
-    products: [],
+    user: {}, 
     order: {
       email: "",
       firstName: "",
@@ -34,62 +21,44 @@ export default new Vuex.Store({
       description: '',
       total:'',
     },
+    course:{},
     orders: []
   },
   getters: {
     UID: state => {
       return state.uid;
     },
-    ROOMID: state => {
-      return state.roomId;
-    },
     USER: state => {
       return state.user;
-    },
-    PROFILE: state => {
-      return state.profile;
-    },
-    PRODUCT: state => {
-      return state.product;
-    },
-    PRODUCTS: state => {
-      return state.products;
     },
     ORDER: state => {
       return state.order;
     },
     ORDERS: state => {
       return state.orders;
+    },
+    COURSE: state => {
+      return state.course;
     }
   },
   mutations: {
     SET_UID: (state, uid) => {
       state.uid = uid;
     },
-    SET_ROOMID: (state, roomId) => {
-      // alert("Store:mutations:SET_ROOMID:roomid: " + roomId);
-      state.roomId = roomId;
-    },
     SET_USER: (state, user) => {
       // alert("Store:mutations:SET_USER:uid: " + user.uid);
       state.user = user;
     },
-    SET_PROFILE: (state, profile) => {
-      state.profile = profile;
-    },
-    SET_PRODUCT: (state, product) => {
-      state.product = product;
-    },
     SET_ORDER: (state, order) => {
       state.order = order;
+    },
+    SET_COURSE: (state, course) => {
+      state.course = course
     }
   },
   actions: {
     SET_UID: (context, uid) => {
       context.commit("SET_UID", uid);
-    },
-    SET_ROOMID: (context, roomId) => {
-      context.commit("SET_ROOMID", roomId);
     },
     SET_USER: (context, user) => {
       // alert("Store:actions:SET_USER:user.uid: " + user.uid);
@@ -98,8 +67,8 @@ export default new Vuex.Store({
     SET_ORDER: (context, order) => {
       context.commit("SET_ORDER", order);
     },
-    SET_PRODUCT: (context, product) => {
-      context.commit("SET_PRODUCT", product);
+    SET_COURSE: (context, course) => {
+      context.commit("SET_COURSE", course);
     }
   }
 });

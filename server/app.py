@@ -1,6 +1,6 @@
 import logging
 log_format = '%(asctime)s %(levelname)s [%(name)s] - %(message)s::%(filename)s::%(lineno)d'
-logging.basicConfig(filename='mylogs.log', filemode='w', level=logging.DEBUG, format=log_format)
+logging.basicConfig(filename='mylogs.log', filemode='w', level=logging.INFO, format=log_format)
 logger = logging.getLogger('WANG')
 
 import os
@@ -26,12 +26,12 @@ app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}})
 
 
-def remove_class(class_id):
-    logger.info("@JWANG: " + class_id)
+def remove_course(course_id):
+    logger.info("@JWANG: " + course_id)
     client = MongoClient('mongodb://localhost:27017')
     db = client['huaxia']
-    classes = db.classes
-    return classes.delete_one({'_id': class_id })
+    courses = db.courses
+    return courses.delete_one({'_id': course_id })
 
 
 # sanity check route
@@ -40,12 +40,12 @@ def ping_pong():
     return jsonify('pong!')
 
 
-@app.route('/classes', methods=['GET', 'POST'])
-def all_classes():
+@app.route('/courses', methods=['GET', 'POST'])
+def all_courses():
     response_object = {'status': 'success'}
     client = MongoClient('mongodb://localhost:27017')
     db = client['huaxia']
-    classes = db.classes
+    courses = db.courses
 
     if request.method == 'POST':
         post_data = request.get_json()
@@ -54,30 +54,31 @@ def all_classes():
             'title': post_data.get('title'),
             'teacher': post_data.get('teacher'),
             'classroom': post_data.get('classroom'),
+            'infolink': post_data.get('infolink'),
             'price': post_data.get('price'),           
         }
-        response_object['message'] = addClass(json)
+        response_object['message'] = addCourse(json)
     else:
-        all_classes = classes.find()
-        myclasses = []
-        for c in all_classes:
-            myclasses.append(c)
-        response_object['classes'] = myclasses
+        all_courses = courses.find()
+        mycourses = []
+        for c in all_courses:
+            mycourses.append(c)
+        response_object['courses'] = mycourses
     return jsonify(response_object)
 
-def addClass(class0):
+def addCourse(course):
     client = MongoClient('mongodb://localhost:27017')
     db = client['huaxia']
-    classes = db.classes
-    result = classes.insert_one(class0)
+    courses = db.courses
+    result = courses.insert_one(course)
     if result.acknowledged:
-        return 'Class added!' + result.inserted_id
+        return 'course added!' + result.inserted_id
 
-def findClass(class_id):
+def findCourse(course_id):
     client = MongoClient('mongodb://localhost:27017')
     db = client['huaxia']
-    classes = db.classes
-    return classes.find_one({'_id':class_id})
+    courses = db.courses
+    return courses.find_one({'_id':course_id})
 
 def findUser(username):
     client = MongoClient('mongodb://localhost:27017')
@@ -91,45 +92,57 @@ def getUser(username):
     response_object['user'] = findUser(username)
     return jsonify(response_object)
     
-@app.route('/classes/<class_id>', methods=['GET', 'PUT', 'DELETE'])
-def single_class(class_id):
-    logger.info("@JWANG: " + class_id);
+@app.route('/courses/<course_id>', methods=['GET', 'PUT', 'DELETE'])
+def single_course(course_id):
+    logger.info("@JWANG: " + course_id);
     response_object = {'status': 'success'}
     if request.method == 'GET':
-        response_object['class0'] = findClass(class_id)
+        response_object['course'] = findCourse(course_id)
     if request.method == 'PUT':
         post_data = request.get_json()
-        remove_class(class_id)
-        class0={
+        remove_course(course_id)
+        course={
             '_id': uuid.uuid4().hex,
             'title': post_data.get('title'),
             'teacher': post_data.get('teacher'),
             'classroom': post_data.get('classroom'),
+            'infolink': post_data.get('infolink'),
             'price': post_data.get('price'),
         }
-        addClass(class0)
-        response_object['message'] = 'Class updated!'
+        addCourse(course)
+        response_object['message'] = 'course updated!'
     if request.method == 'DELETE':
-        remove_class(class_id)
-        response_object['message'] = 'Class removed!'
+        remove_course(course_id)
+        response_object['message'] = 'course removed!'
     return jsonify(response_object)
 
 @app.route('/charge', methods=['POST'])
 def create_charge():
     post_data = request.get_json()
-    logger.info("@JWANG: " + post_data.get('class0')['price']);
-    amount = round(float(post_data.get('class0')['price']) * 100)
+    logger.info("@JWANG: " + post_data.get('course')['price']);
+    amount = round(float(post_data.get('course')['price']) * 100)
 #    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
     stripe.api_key = STRIPE_SECRET_KEY
     charge = stripe.Charge.create(
         amount=amount,
         currency='usd',
         card=post_data.get('token'),
-        description=post_data.get('class0')['title'] + '/' + post_data.get('class0')['teacher']
+        description=post_data.get('course')['title'] + '/' + post_data.get('course')['teacher']
     )
     response_object = {
         'status': 'success',
         'charge': charge
+    }
+    return jsonify(response_object), 200
+
+@app.route('/files/<filename>')
+def readfile(filename):
+    with open('../src/assets/' + filename + '.html') as f:
+        text = f.read()
+
+    response_object = {
+        'status': 'success',
+        'html': text
     }
     return jsonify(response_object), 200
 

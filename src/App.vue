@@ -1,7 +1,10 @@
 <template>
     <div id="app">
         <div id="nav">
-            <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
+            <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link> | 
+            <router-link v-if="authenticated" to="/activities"
+            v-on:click.native="setAuthenticated(true)" replace>学校近期活动安排</router-link> | 
+            <router-link v-if="authenticated" to="/courses">课程表</router-link>
         </div>
         <router-view @authenticated="setAuthenticated" />
     </div>

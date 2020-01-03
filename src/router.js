@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import ClassesComponent from './components/Classes.vue';
+import CoursesComponent from './components/Courses.vue';
+import ActivitiesComponent from '@/views/activities.vue';
 import Order from './components/Order.vue';
 import Ping from './components/Ping.vue';
 import OrderComplete from './components/OrderComplete.vue';
@@ -30,9 +31,14 @@ export default new Router({
       component: SecureComponent
     },
     {
-      path: '/classes',
-      name: 'classes',
-      component: ClassesComponent,
+      path: "/activities",
+      name: "activities",
+      component: ActivitiesComponent
+    },
+    {
+      path: '/courses',
+      name: 'courses',
+      component: CoursesComponent,
     },
     {
       path: '/order/:_id',
