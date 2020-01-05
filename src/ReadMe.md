@@ -1,5 +1,8 @@
 # Huaxia development notes
 
+## Back to main document
+[Master ReadMe.md](../ReadMe.md)
+
 ## Avoid Unexpected console
 ```js
     // eslint-disable-next-line

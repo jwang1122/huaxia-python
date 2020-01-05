@@ -107,7 +107,7 @@
                           type="text"
                           v-model="addClassForm.infolink"
                           required
-                          placeholder="Enter infolink">
+                          placeholder="Enter html file name with no extension.">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-price-group"
