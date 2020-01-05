@@ -7,6 +7,7 @@ import Ping from './components/Ping.vue';
 import OrderComplete from './components/OrderComplete.vue';
 import LoginComponent from '@/views/login.vue';
 import SecureComponent from '@/views/secure.vue';
+import StudentsComponent from "@/components/Students.vue";
 
 Vue.use(Router);
 
@@ -39,6 +40,11 @@ export default new Router({
       path: '/courses',
       name: 'courses',
       component: CoursesComponent,
+    },
+    {
+      path: '/students',
+      name: 'students',
+      component: StudentsComponent,
     },
     {
       path: '/order/:_id',

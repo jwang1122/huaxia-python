@@ -43,14 +43,14 @@
                           class="btn btn-warning btn-sm"
                           v-b-modal.class-update-modal
                           v-if="user['rule']=='admin'"
-                          @click="editClass(course)">
+                          @click="editCourse(course)">
                       修改
                   </button>
                   <button
                           type="button"
                           v-if="user['rule']=='admin'"
                           class="btn btn-danger btn-sm"
-                          @click="onDeleteClass(course)">
+                          @click="onDeleteCourse(course)">
                       删除
                   </button>
                   <router-link :to="`/order/${course._id}`"
@@ -127,7 +127,7 @@
         </b-button-group>
       </b-form>
     </b-modal>
-    <b-modal ref="editClassModal"
+    <b-modal ref="editCourseModal"
             id="class-update-modal"
             title="修改课程"
             hide-footer>
@@ -279,12 +279,12 @@ export default {
       this.$refs.addClassModal.hide();
       this.initForm();
     },
-    editClass(course) {
+    editCourse(course) {
       this.editForm = course;
     },
     onSubmitUpdate(evt) {
       evt.preventDefault();
-      this.$refs.editClassModal.hide();
+      this.$refs.editCourseModal.hide();
       const payload = {
         title: this.editForm.title,
         teacher: this.editForm.teacher,
@@ -292,10 +292,10 @@ export default {
         classroom: this.editForm.classroom,
         infolink: this.addClassForm.infolink,
       };
-      this.updateClass(payload, this.editForm._id);
+      this.updateCourse(payload, this.editForm._id);
     },
-    updateClass(payload, classID) {
-      const path = `http://localhost:5000/courses/${classID}`;
+    updateCourse(payload, courseID) {
+      const path = `http://localhost:5000/courses/${courseID}`;
       axios.put(path, payload)
         .then(() => {
           this.getCourses();
@@ -310,12 +310,12 @@ export default {
     },
     onResetUpdate(evt) {
       evt.preventDefault();
-      this.$refs.editClassModal.hide();
+      this.$refs.editCourseModal.hide();
       this.initForm();
       this.getCourses(); // why?
     },
-    removeClass(classID) {
-      const path = `http://localhost:5000/courses/${classID}`;
+    removeCourse(courseID) {
+      const path = `http://localhost:5000/courses/${courseID}`;
       axios.delete(path)
         .then(() => {
           this.getCourses();
@@ -328,8 +328,8 @@ export default {
           this.getCourses();
         });
     },
-    onDeleteClass(course) {
-      this.removeClass(course._id);
+    onDeleteCourse(course) {
+      this.removeCourse(course._id);
     },
     getCourseInfo(course){
        this.$store.commit("SET_COURSE", course);

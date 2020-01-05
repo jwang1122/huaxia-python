@@ -33,6 +33,13 @@ def remove_course(course_id):
     courses = db.courses
     return courses.delete_one({'_id': course_id })
 
+def remove_student(student_id):
+    logger.info("@JWANG: " + student_id)
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    students = db.students
+    return students.delete_one({'_id': student_id })
+
 
 # sanity check route
 @app.route('/ping', methods=['GET'])
@@ -66,6 +73,33 @@ def all_courses():
         response_object['courses'] = mycourses
     return jsonify(response_object)
 
+@app.route('/students', methods=['GET', 'POST'])
+def all_students():
+    response_object = {'status': 'success'}
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    students = db.students
+
+    if request.method == 'POST':
+        post_data = request.get_json()
+        json = {
+            '_id':uuid.uuid4().hex,
+            'fullname': post_data.get('fullname'),
+            'age': post_data.get('age'),
+            'gender': post_data.get('gender'),
+            'parentname': post_data.get('parentname'),
+            'phone': post_data.get('phone'),           
+        }
+        response_object['message'] = addStudent(json)
+    else:
+        all_students = students.find()
+        mycourses = []
+        for c in all_students:
+            mycourses.append(c)
+        response_object['students'] = mycourses
+    return jsonify(response_object)
+
+
 def addCourse(course):
     client = MongoClient('mongodb://localhost:27017')
     db = client['huaxia']
@@ -74,11 +108,25 @@ def addCourse(course):
     if result.acknowledged:
         return 'course added!' + result.inserted_id
 
+def addStudent(student):
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    students = db.students
+    result = students.insert_one(student)
+    if result.acknowledged:
+        return 'student added!' + result.inserted_id
+
 def findCourse(course_id):
     client = MongoClient('mongodb://localhost:27017')
     db = client['huaxia']
     courses = db.courses
     return courses.find_one({'_id':course_id})
+
+def findStudent(student_id):
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    students = db.students
+    return students.find_one({'_id':student_id})
 
 def findUser(username):
     client = MongoClient('mongodb://localhost:27017')
@@ -114,6 +162,30 @@ def single_course(course_id):
     if request.method == 'DELETE':
         remove_course(course_id)
         response_object['message'] = 'course removed!'
+    return jsonify(response_object)
+
+@app.route('/students/<student_id>', methods=['GET', 'PUT', 'DELETE'])
+def single_student(student_id):
+    logger.info("@JWANG: " + student_id);
+    response_object = {'status': 'success'}
+    if request.method == 'GET':
+        response_object['student'] = findStudent(student_id)
+    if request.method == 'PUT':
+        post_data = request.get_json()
+        remove_student(student_id)
+        student={
+            '_id': uuid.uuid4().hex,
+            'fullname': post_data.get('fullname'),
+            'age': post_data.get('age'),
+            'gender': post_data.get('gender'),
+            'parentname': post_data.get('parentname'),
+            'phone': post_data.get('phone'),
+        }
+        addStudent(student)
+        response_object['message'] = 'course updated!'
+    if request.method == 'DELETE':
+        remove_student(student_id)
+        response_object['message'] = 'student removed!'
     return jsonify(response_object)
 
 @app.route('/charge', methods=['POST'])

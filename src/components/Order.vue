@@ -2,19 +2,19 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-10">
-        <h1>Ready to buy?</h1>
+        <h1>确定要注册了吗?</h1>
         <hr>
         <router-link to="/courses" class="btn btn-primary">
-          Back Home
+          返回
         </router-link>
         <br><br><br>
         <div class="row">
           <div class="col-sm-6">
             <div>
-              <h4>You are buying:</h4>
+              <h4>您所注册的课程:</h4>
               <ul>
-                <li>course Title: <em>{{ course.title }} / {{course.teacher}}</em></li>
-                <li>Amount: <em>{{ course.price }}</em></li>
+                <li>课程名称: <em>{{ course.title }} / {{course.teacher}}</em></li>
+                <li>学期学费: <em>${{ course.price }}</em></li>
               </ul>
             </div>
             <div>
@@ -146,7 +146,8 @@ export default {
           const path = 'http://localhost:5000/charge';
           axios.post(path, payload)
             .then((res) => {
-              this.$router.push({ path: `/complete/${res.data.charge.id}` });
+              let chargeId = res.data.charge.id;
+              this.$router.push({ path: `/complete/${chargeId}` });
             })
             .catch((error) => {
               // eslint-disable-next-line
