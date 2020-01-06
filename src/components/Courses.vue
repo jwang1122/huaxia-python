@@ -65,7 +65,7 @@
         </table>
       </div>
     </div>
-    <b-modal ref="addClassModal"
+    <b-modal ref="addCourseModal"
             id="class-modal"
             title="增加新课程"
             hide-footer>
@@ -162,10 +162,10 @@
                           placeholder="Enter classroom">
             </b-form-input>
           </b-form-group>
-        <b-form-group id="form-classroom-edit-group"
+        <b-form-group id="form-infolink-edit-group"
                       label="课程简介:"
-                      label-for="form-classroom-edit-input">
-            <b-form-input id="form-classroom-edit-input"
+                      label-for="form-infolink-edit-input">
+            <b-form-input id="form-infolink-edit-input"
                           type="text"
                           v-model="editForm.infolink"
                           required
@@ -263,7 +263,7 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.$refs.addClassModal.hide();
+      this.$refs.addCourseModal.hide();
       const payload = {
         title: this.addClassForm.title,
         teacher: this.addClassForm.teacher,
@@ -276,7 +276,7 @@ export default {
     },
     onReset(evt) {
       evt.preventDefault();
-      this.$refs.addClassModal.hide();
+      this.$refs.addCourseModal.hide();
       this.initForm();
     },
     editCourse(course) {
@@ -290,7 +290,7 @@ export default {
         teacher: this.editForm.teacher,
         price: this.editForm.price,
         classroom: this.editForm.classroom,
-        infolink: this.addClassForm.infolink,
+        infolink: this.editForm.infolink,
       };
       this.updateCourse(payload, this.editForm._id);
     },

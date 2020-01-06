@@ -1,7 +1,39 @@
 # huaxia
+
 ## Other documents
 [Vue ReadMe.md](./src/ReadMe.md)
 [Python ReadMe.md](./server/ReadMe.md)
+[Stripe Dashboard](./stripe.md)
+[Project Creation](#Project-Creation)
+[Project setup](#Project-setup)
+
+## Run this application
+1. Need start python stripe server before running Vue web page
+open Console command window
+```
+cd ~/workspace/vue/huaxia/server
+
+// if in the different virtual environment such as (base)
+conda deactivate
+
+// if not under virtual environment (evn)
+source env/bin/activate
+
+python app.py
+```
+2. Start MongoDB server
+Open command window
+```
+mongod
+```
+3. Start web server
+Open command window
+```
+// if not install vuex yet
+npm install --save vuex
+cd workspace/vue/huaxia
+npm run serve
+```
 
 ## Project setup
 ```bash
@@ -37,36 +69,6 @@ add following line in public/index.html
 ```html
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 ```
-
-
-### Run this application
-1. Need start python stripe server before running Vue web page
-open Console command window
-```
-cd ~/workspace/vue/huaxia/server
-
-// if in the different virtual environment such as (base)
-conda deactivate
-
-// if not under virtual environment (evn)
-source env/bin/activate
-
-python app.py
-```
-2. Start MongoDB server
-Open command window
-```
-mongod
-```
-3. Start web server
-Open command window
-```
-// if not install vuex yet
-npm install --save vuex
-cd workspace/vue/huaxia
-npm run serve
-```
-
 
 ## Run application job in background
 1. start python server (fail to do this)

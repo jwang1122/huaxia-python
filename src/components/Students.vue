@@ -241,11 +241,14 @@ export default {
     initForm() {
       this.addStudentForm.fullname = '';
       this.addStudentForm.age = '';
-      this.addStudentForm.gender = '';
+      this.addStudentForm.parentname = '';
+      this.addStudentForm.phone = '';
       this.editForm._id = '';
       this.editForm.fullname = '';
       this.editForm.age = '';
       this.editForm.gender = '';
+      this.editForm.parentname = '';
+      this.editForm.phone = '';
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -276,7 +279,7 @@ export default {
         age: this.editForm.age,
         phone: this.editForm.phone,
         gender: this.editForm.gender,
-        parentname: this.addStudentForm.parentname,
+        parentname: this.editForm.parentname,
       };
       this.updateStudent(payload, this.editForm._id);
     },

@@ -8,6 +8,7 @@ import OrderComplete from './components/OrderComplete.vue';
 import LoginComponent from '@/views/login.vue';
 import SecureComponent from '@/views/secure.vue';
 import StudentsComponent from "@/components/Students.vue";
+import ComboComponent from "@/components/combotest.vue";
 
 Vue.use(Router);
 
@@ -25,6 +26,11 @@ export default new Router({
       path: "/login",
       name: "login",
       component: LoginComponent
+    },
+    {
+      path: "/combo",
+      name: "combo",
+      component: ComboComponent
     },
     {
       path: "/secure",

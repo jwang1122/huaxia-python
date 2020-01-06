@@ -8,6 +8,7 @@
           返回
         </router-link>
         <br><br><br>
+
         <div class="row">
           <div class="col-sm-6">
             <div>
@@ -17,13 +18,32 @@
                 <li>学期学费: <em>${{ course.price }}</em></li>
               </ul>
             </div>
+
             <div>
               <h4>Use this info for testing:</h4>
-              <ul>
-                <li>Card Number: 4242424242424242</li>
-                <li>CVC Code: any three digits</li>
-                <li>Expiration: any date in the future</li>
-              </ul>
+              <v-combobox
+                v-model="student"
+              :items="this.students"
+              item-text="fullname"
+              label="Student:"
+              prepend-icon="people"
+            >
+            <template v-slot:selection="data">
+            <v-chip
+              :key="JSON.stringify(data.item)"
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              :disabled="data.disabled"
+              @click.stop="data.parent.selectedIndex = data.index"
+              @click:close="data.parent.selectItem(data.item)"
+            >
+              <v-avatar class="accent white--text" left>
+                {{ data.item.slice(0, 1).toUpperCase() }}
+              </v-avatar>
+              {{ data.item }}
+            </v-chip>
+          </template>
+            </v-combobox>
             </div>
           </div>
           <div class="col-sm-6">
@@ -79,6 +99,8 @@ import stripeKey from '@/config.js'
 export default {
   data() {
     return {
+      student:{},
+      students:[],
       course: {
         title: '',
         teacher: '',
@@ -159,6 +181,14 @@ export default {
 
   },
   created() {
+    this.students=[
+      {"fullname":"john","_id":"12345"},
+      {"fullname":"ailian","_id":"34562"},
+      {"fullname":"charlse","_id":"11111"},
+      {"fullname":"weiping","_id":"22222"},
+      {"fullname":"wujun","_id":"56423"},
+      {"fullname":"helen","_id":"97543"},
+    ];
     this.getCourse();
   },
 };
