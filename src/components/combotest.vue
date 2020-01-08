@@ -64,7 +64,7 @@
     data () {
       return {
         hasSaved: false,
-        isEditing: true,
+        isEditing: null,
         model: null,
         states: [
           { name: 'Florida', abbr: 'FL', id: 1 },

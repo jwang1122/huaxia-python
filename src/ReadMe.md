@@ -6,9 +6,28 @@
 
 ## Install vuetify
 ```js
+vue install --save @vue/cli
 vue add vuetify
 vue ui
 ```
+非常重要，网上的vuetify的例子，比如v-autocomplete都是一半工作。
+原因是在App.vue中必须使用<v-app>标记，而不是<div id="v-app">
+···html
+<template>
+    <v-app>
+        <div id="nav">
+            <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link> | 
+            <router-link v-if="authenticated" to="/activities"
+            v-on:click.native="setAuthenticated(true)" replace>学校近期活动安排</router-link> | 
+            <router-link v-if="authenticated" to="/courses">课程表</router-link> | 
+            <router-link v-if="authenticated" to="/students">学生登记表</router-link> |
+            <router-link to="/combo">Combobox test</router-link>
+        </div>
+        <router-view @authenticated="setAuthenticated" />
+    </v-app>
+</template>
+
+···
 
 ## Avoid Unexpected console
 ```js

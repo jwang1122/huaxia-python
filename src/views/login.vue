@@ -1,9 +1,9 @@
 <template>
-  <div id="login">
+  <div id="login" >
     <h1>Login</h1>
-    <input type="text" name="username" v-model="input.username" placeholder="Username" />
-    <input type="password" name="password" v-model="input.password" placeholder="Password" />
-    <button type="button" v-on:click="login()">Login</button>
+    <input type="text" class="form-control" name="username" v-model="input.username" placeholder="Username" required/><br>
+    <input type="password" class="form-control" name="password" v-model="input.password" placeholder="Password" required/><br>
+    <button type="button" class="btn btn-primary" v-on:click="login()">登录</button>
   </div>
 </template>
 
@@ -56,9 +56,9 @@ export default {
 
 <style scoped>
 #login {
-  width: 500px;
+  width: 400px;
   border: 1px solid #cccccc;
-  background-color: #ffffff;
+  background-color: lightblue;
   margin: auto;
   margin-top: 200px;
   padding: 20px;

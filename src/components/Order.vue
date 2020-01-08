@@ -20,17 +20,21 @@
             </div>
 
             <div>
-              <h4>Use this info for testing:</h4>
-      <v-autocomplete
-         :items="students"
-        color="red"
-        item-text="fullname"
-        label="Student"
-      ></v-autocomplete>
+              <h4>选择学生（输入姓名）按下tab键:</h4>
+              <v-autocomplete
+                v-model="student_id"
+                :items="students"
+                color="red"
+                item-text="fullname"
+                item-value="_id"
+                label="学生姓名，fistname"
+              ></v-autocomplete>
             </div>
+            课程编号：{{ course_id }}<br>
+            学生编号：{{ student_id }}
           </div>
           <div class="col-sm-6">
-            <h3>One time payment</h3>
+            <h3>一次性缴纳学费</h3>
             <br>
             <form>
               <div class="form-group">
@@ -82,9 +86,11 @@ import stripeKey from '@/config.js'
 export default {
   data() {
     return {
-      student:{},
+      student_id:'',
+      course_id:'',
       students:[],
       course: {
+        _id:'',
         title: '',
         teacher: '',
         classroom: '',
@@ -103,6 +109,7 @@ export default {
   },
   methods: {
     getCourse() {
+      this.course_id = this.$route.params._id;
       const path = `http://localhost:5000/courses/${this.$route.params._id}`;
       axios.get(path)
         .then((res) => {
@@ -115,6 +122,7 @@ export default {
     },
     validate() {
 //      alert('validate()...');
+//      alert('selected student: ' + this.student_id);
       this.errors = [];
       let valid = true;
       if (!this.card.number) {
@@ -152,6 +160,7 @@ export default {
           axios.post(path, payload)
             .then((res) => {
               let chargeId = res.data.charge.id;
+              this.savePayment(chargeId);
               this.$router.push({ path: `/complete/${chargeId}` });
             })
             .catch((error) => {
@@ -161,18 +170,34 @@ export default {
         }
       });
     },
-
+    savePayment(chargeId){
+      const path = 'http://localhost:5000/payment';
+      const payload = {
+            chargeId: chargeId,
+            courseId: this.course_id,
+            studentId: this.student_id,
+          };
+      axios.post(path, payload)
+        .then((res) => {
+          console.log(res.data.message);
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    }
   },
   created() {
-    this.students=[
-      {"fullname":"john wang","_id":"12345"},
-      {"fullname":"ailian wang","_id":"34562"},
-      {"fullname":"charlse wang","_id":"11111"},
-      {"fullname":"weiping xing","_id":"22222"},
-      {"fullname":"jun wu","_id":"56423"},
-      {"fullname":"helen yang","_id":"97543"},
-    ];
-    this.getCourse();
+    const path = 'http://localhost:5000/students';
+    axios.get(path)
+      .then((res) => {
+        this.students = res.data.students;
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
+      this.getCourse();
   },
 };
 </script>

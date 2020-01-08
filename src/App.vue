@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <v-app>
         <div id="nav">
             <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link> | 
             <router-link v-if="authenticated" to="/activities"
@@ -9,7 +9,7 @@
             <router-link to="/combo">Combobox test</router-link>
         </div>
         <router-view @authenticated="setAuthenticated" />
-    </div>
+    </v-app>
 </template>
 
 <script>

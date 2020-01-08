@@ -207,6 +207,26 @@ def create_charge():
     }
     return jsonify(response_object), 200
 
+@app.route('/payment', methods=['POST'])
+def creat_payment():
+        post_data = request.get_json()
+        json = {
+            '_id':uuid.uuid4().hex,
+            'courseId': post_data.get('courseId'),
+            'chargeId': post_data.get('chargeId'),
+            'studentId': post_data.get('studentId'),
+        }
+        response_object['message'] = addPayment(json)
+
+def addPayment(payment):
+    client = MongoClient('mongodb://localhost:27017')
+    db = client['huaxia']
+    course_payments = db.course_payments
+    result = course_payments.insert_one(payment)
+    if result.acknowledged:
+        return 'Payment added!' + result.inserted_id
+
+
 @app.route('/files/<filename>')
 def readfile(filename):
     with open('../src/assets/' + filename + '.html') as f:

@@ -17,16 +17,17 @@
 10. ~~check CRUD~~
 11. ~~Load courses from MongoDB。~~
 12. save payment information into MongoDB
-    * 12a. get charge information from Stripe
-    * 12b. Create user payments and course view page
+    * 12a. ~~load student information from MongoDB, for dropdown autocomplete box.~~
+    * 12b. ~~get charge information from Stripe~~
+    * 12c. Create user payments and course view page
 
 13. Add user CRUD processing. and management GUI
 
 14. change delete course to be inactive, don't ever delete course from database.
     * change load all courses to load all active courses. 
 
-15. add school activities dashboard.
+15. ~~add school activities dashboard.~~
 
 16. add teacher/parent communication chat room.
 
-17. add student information page, save to MongoDB.
+17. ~~add student information page, save to MongoDB.~~
