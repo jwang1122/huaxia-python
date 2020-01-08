@@ -3,6 +3,13 @@
 ## Back to main document
 [Master ReadMe.md](../ReadMe.md)
 
+
+## Install vuetify
+```js
+vue add vuetify
+vue ui
+```
+
 ## Avoid Unexpected console
 ```js
     // eslint-disable-next-line

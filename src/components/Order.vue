@@ -21,29 +21,12 @@
 
             <div>
               <h4>Use this info for testing:</h4>
-              <v-combobox
-                v-model="student"
-              :items="this.students"
-              item-text="fullname"
-              label="Student:"
-              prepend-icon="people"
-            >
-            <template v-slot:selection="data">
-            <v-chip
-              :key="JSON.stringify(data.item)"
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              :disabled="data.disabled"
-              @click.stop="data.parent.selectedIndex = data.index"
-              @click:close="data.parent.selectItem(data.item)"
-            >
-              <v-avatar class="accent white--text" left>
-                {{ data.item.slice(0, 1).toUpperCase() }}
-              </v-avatar>
-              {{ data.item }}
-            </v-chip>
-          </template>
-            </v-combobox>
+      <v-autocomplete
+         :items="students"
+        color="red"
+        item-text="fullname"
+        label="Student"
+      ></v-autocomplete>
             </div>
           </div>
           <div class="col-sm-6">
@@ -182,12 +165,12 @@ export default {
   },
   created() {
     this.students=[
-      {"fullname":"john","_id":"12345"},
-      {"fullname":"ailian","_id":"34562"},
-      {"fullname":"charlse","_id":"11111"},
-      {"fullname":"weiping","_id":"22222"},
-      {"fullname":"wujun","_id":"56423"},
-      {"fullname":"helen","_id":"97543"},
+      {"fullname":"john wang","_id":"12345"},
+      {"fullname":"ailian wang","_id":"34562"},
+      {"fullname":"charlse wang","_id":"11111"},
+      {"fullname":"weiping xing","_id":"22222"},
+      {"fullname":"jun wu","_id":"56423"},
+      {"fullname":"helen yang","_id":"97543"},
     ];
     this.getCourse();
   },
